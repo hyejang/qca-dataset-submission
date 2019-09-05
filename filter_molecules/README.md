@@ -44,6 +44,8 @@ Per Walters' blog post, a handy command after running this is `awk -F',' '{print
  ```
  So we're losing most of our compounds to having metals in them, a bunch to having azo or pyridinium or imines, halo pyridines, etc.
 
+ Visualized PDFs of what was removed and what remains; indeed, a lot of while chemistry was removed, but there is plenty of interesting chemistry remaining. I suspect this will be a rather challenging test set.
+
 
 ## Manifest
 
@@ -52,3 +54,6 @@ Per Walters' blog post, a handy command after running this is `awk -F',' '{print
     - `discrepancies_in.smi`: Reformatted eMolecules discrepancies set for input to rdfilters
     - `discrepancies_out.smi`: Remaining compounds
     - `discrepancies_out.csv`: Info provided by filtering
+    - `visualize_rdfiltered_mols.py`: Generate PDF of molecules filtered out.
+    - `discrepancies_removed.pdf`: Compounds removed by filtering
+    - `discrepancies_remains.pdf`: What's left after filtering
