@@ -54,6 +54,10 @@ Per Walters' blog post, a handy command after running this is `awk -F',' '{print
 
 Run `filter_by_QED.py` with an input file and an output prefix specified, e.g. `python filter_by_QED.py discrepancies_in.smi discrepancies_QED`.
 
+### OEChem
+
+Run `filter_by_OEChem.py`. Currently filters with the recommended "blockbusters" filter for drug-likeness (an OpenEye built-in filter). Retains 2106 of 2904 molecules.
+
 ## Manifest
 
 - `rdfilters`-related:
@@ -69,3 +73,9 @@ Run `filter_by_QED.py` with an input file and an output prefix specified, e.g. `
     - `discrepancies_QED_removed.smi`: Molecules removed by QED filtering with specified threshold
     - `discrepancies_retained.smi`: Molecules retained after QED filtering with specified threshold
     - `discrepancies...pdf`: PDF files visualizing the former two sets.
+- `OEChem`-related:
+    - `filter_by_OEChem.py`: Filters molecules using OEChem toolkits
+    - `discrepancies_OE_removed.smi`: Removed molecules from oechem
+    - `discrepancies_OE_retained.smi`: Retained molecules from OEChem
+    - `discrepancies_OE_retained.pdf`: Retained molecules from OEChem
+    - `discrepancies_OE_removed.pdf`: Removed molecules from OEChem
