@@ -46,17 +46,21 @@ Per Walters' blog post, a handy command after running this is `awk -F',' '{print
   18 Filter6_benzyl_halide > 0
   18 Filter2_acyl_phosphyl_sulfonyl_halide > 0
  ```
- So we're losing most of our compounds to having metals in them, a bunch to having azo or pyridinium or imines, halo pyridines, etc.
+ So we're losing most of our compounds to having metals in them, a bunch to having azo or pyridinium or imines, halo pyridines, etc. Total removed 1058.
 
  Visualized PDFs of what was removed and what remains; indeed, a lot of while chemistry was removed, but there is plenty of interesting chemistry remaining. I suspect this will be a rather challenging test set.
 
 ### QED
 
-Run `filter_by_QED.py` with an input file and an output prefix specified, e.g. `python filter_by_QED.py discrepancies_in.smi discrepancies_QED`.
+Run `filter_by_QED.py` with an input file and an output prefix specified, e.g. `python filter_by_QED.py discrepancies_in.smi discrepancies_QED`. With currrent threshold (0.5) it removes 346 molecules.
 
 ### OEChem
 
-Run `filter_by_OEChem.py`. Currently filters with the recommended "blockbusters" filter for drug-likeness (an OpenEye built-in filter). Retains 2106 of 2904 molecules.
+Run `filter_by_OEChem.py`. Currently filters with the recommended "blockbusters" filter for drug-likeness (an OpenEye built-in filter). Retains 2106 of 2904 molecules. (798 removed)
+
+### Consensus
+
+Run `crosscheck.py`, looks at compounds across all three sets and retains only those that none of the methods flag for removal. Leaves only 592 (2312 removed).
 
 ## Manifest
 
@@ -79,3 +83,7 @@ Run `filter_by_OEChem.py`. Currently filters with the recommended "blockbusters"
     - `discrepancies_OE_retained.smi`: Retained molecules from OEChem
     - `discrepancies_OE_retained.pdf`: Retained molecules from OEChem
     - `discrepancies_OE_removed.pdf`: Removed molecules from OEChem
+- Consensus:
+    - `crosscheck.py`: Combines results of all three analyses; generates a set where all compounds ANY method suggests should be removed are removed, so the only ones left are those no method flags for removal.
+    - `discrepancies_combined_removed.pdf`: All compounds removed by any method
+    - `discrepancies_combined_retained.pdf`: All compounds retained by all methods.
