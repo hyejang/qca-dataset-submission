@@ -15,9 +15,13 @@ Here I intend to experiment with one or more of these.
 ## Prerequisites
 
 - Requires Walters' `rd_filters`, https://github.com/PatWalters/rd_filters with appropriate `FILTER_RULES_DATA` environment variable set
+- `rdkit`
+- OpenEye toolkits (and license)
 
 
 ## Running
+
+### RDfilters
 
 Filtering with `rd_filters` should be something like `rd_filters filter --in discrepancies_in.smi --prefix discrepancies_out`; the file `discrepancies_in.smi` has been generated first by running `add_numbers.py` on the `input.smi` file from the 2019-07-05 eMolecules descrepancies set. Output is:
 
@@ -46,6 +50,9 @@ Per Walters' blog post, a handy command after running this is `awk -F',' '{print
 
  Visualized PDFs of what was removed and what remains; indeed, a lot of while chemistry was removed, but there is plenty of interesting chemistry remaining. I suspect this will be a rather challenging test set.
 
+### QED
+
+Run `filter_by_QED.py` with an input file and an output prefix specified, e.g. `python filter_by_QED.py discrepancies_in.smi discrepancies_QED`.
 
 ## Manifest
 
@@ -57,3 +64,8 @@ Per Walters' blog post, a handy command after running this is `awk -F',' '{print
     - `visualize_rdfiltered_mols.py`: Generate PDF of molecules filtered out.
     - `discrepancies_removed.pdf`: Compounds removed by filtering
     - `discrepancies_remains.pdf`: What's left after filtering
+- `QED`-related:
+    - `filter_by_QED.py`: Utilizes RDKit QED code to filter by that score (runs 0 to 1). Does visualization of output molecules as well.
+    - `discrepancies_QED_removed.smi`: Molecules removed by QED filtering with specified threshold
+    - `discrepancies_retained.smi`: Molecules retained after QED filtering with specified threshold
+    - `discrepancies...pdf`: PDF files visualizing the former two sets.
