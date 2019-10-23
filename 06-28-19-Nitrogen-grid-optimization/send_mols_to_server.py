@@ -38,14 +38,17 @@ client = ptl.FractalClient("https://localhost:7777/", verify=False)
 def make_ptl_mol(oemol):
     """Builds a QCPortal Molecule from an OpenEye molecule"""
     coords = oemol.GetCoords()
-    coord_str = '\n'.join(
-        (f"{oechem.OEGetAtomicSymbol(atom.GetAtomicNum())}   "
-                   f"{'   '.join(str(c) for c in coords[atom.GetIdx()])}")
-                  for atom in mol.GetAtoms())
-    print(coord_str)
-    conn = np.array([[bond.GetBgnIdx(), bond.GetEndIdx(), bond.GetOrder()] for bond
-            in mol.GetBonds()])
-    return ptl.Molecule.from_data(coord_str, connectivity=conn)
+    conn = np.array([[bond.GetBgnIdx(), bond.GetEndIdx(), bond.GetOrder()] for bond in oemol.GetBonds()])
+
+    symbols_list = [oechem.OEGetAtomicSymbol(atom.GetAtomicNum()) for atom in oemol.GetAtoms()]
+    coord_list = [c for atom in oemol.GetAtoms() for c in coords[atom.GetIdx()]]
+    ptl_mol = ptl.Molecule.from_data(
+                {'geometry':coord_list,
+                'symbols':symbols_list,
+                'connectivity':conn})
+
+
+    return ptl_mol
 
 def send_qm_job(ptl_mol, nitrogen, nitrogen_i,  mol):
     """Sends a job to the QM Client - returns a submitted object"""
@@ -53,7 +56,6 @@ def send_qm_job(ptl_mol, nitrogen, nitrogen_i,  mol):
     print(f"indices: {indices}")
     keywords = ptl.models.KeywordSet(values={"scf_properties":["wiberg_lowdin_indices"]})
     try:
-        #keywords_id = (client.add_keywords([keywords])[0])
 
         keywords_id = str(client.add_keywords([keywords])[0])
 
@@ -62,8 +64,12 @@ def send_qm_job(ptl_mol, nitrogen, nitrogen_i,  mol):
         smiles=cmiles.utils.mol_to_smiles(mol, mapped=False, explicit_hydrogen=False)
         mol_id = cmiles.get_molecule_ids(smiles, toolkit='openeye', strict=False)
 
+
+
         geometry=np.array([[ptl_mol.geometry]]).ravel().tolist()
         symbols=np.array([[ptl_mol.symbols]]).ravel().tolist()
+        connectivity=np.array(ptl_mol.connectivity).tolist()
+
         jsonDict={
                 "cmiles_ids":mol_id,
                 "keywords": {
@@ -71,7 +77,7 @@ def send_qm_job(ptl_mol, nitrogen, nitrogen_i,  mol):
                     "scans": [{
                         "type": "dihedral",
                         "indices": list(indices),
-                        "steps": [-40, -36, -32, -28, -24, -20, -16, -12, -8, -4, 0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40],
+                        "steps": [-50, -48, -46, -44, -42, -40, -36, -32, -28, -24, -20, -16, -12, -8, -4, 0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 42, 44, 46, 48, 50],
                         "step_type": "absolute"
                     }]
                 },
@@ -90,7 +96,8 @@ def send_qm_job(ptl_mol, nitrogen, nitrogen_i,  mol):
                 },
                 "initial_molecule":{
                     "geometry":geometry,
-                    "symbols":symbols
+                    "symbols":symbols,
+                    "connectivity":connectivity
                     }}
         return jsonDict, smiles
 
